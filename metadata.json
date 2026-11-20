@@ -1,0 +1,6 @@
+{
+  "name": "Mauzo App",
+  "description": "Offline-first Tanzanian mobile money SMS transaction monitor, ledger, and financial reporting app.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

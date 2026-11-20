@@ -1,0 +1,246 @@
+{
+  "entities": {
+    "UserBusinessProfile": {
+      "title": "UserBusinessProfile",
+      "description": "Business settings and profile scoped to the authenticated Google user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the business owner."
+        },
+        "businessName": {
+          "type": "string",
+          "description": "Display name of the business."
+        },
+        "primaryLanguage": {
+          "type": "string",
+          "enum": ["sw", "en"],
+          "description": "Primary UI language code (Swahili or English)."
+        },
+        "currencyCode": {
+          "type": "string",
+          "description": "Currency code (default TZS)."
+        },
+        "email": {
+          "type": "string",
+          "description": "Optional owner email address."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "businessName",
+        "primaryLanguage",
+        "currencyCode",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "CloudTransactionRecord": {
+      "title": "CloudTransactionRecord",
+      "description": "Mobile money or manual transaction synced to Firestore for backup and recovery.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the owner."
+        },
+        "transactionId": {
+          "type": "string",
+          "description": "Provider or manual transaction reference ID."
+        },
+        "network": {
+          "type": "string",
+          "enum": ["MPESA", "AIRTEL_MONEY", "MIXX_BY_YAS", "UNKNOWN"],
+          "description": "Mobile money network code."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "MONEY_RECEIVED",
+            "MONEY_SENT",
+            "CASH_WITHDRAWAL",
+            "CASH_DEPOSIT",
+            "TRANSACTION_FEE",
+            "REFUND",
+            "REVERSAL",
+            "MANUAL_ADJUSTMENT"
+          ],
+          "description": "Financial transaction type."
+        },
+        "amount": {
+          "type": "string",
+          "description": "Exact BigDecimal amount as string."
+        },
+        "fee": {
+          "type": "string",
+          "description": "Exact BigDecimal fee as string."
+        },
+        "senderOrRecipientName": {
+          "type": "string",
+          "description": "Counterparty name or Unknown."
+        },
+        "senderOrRecipientPhone": {
+          "type": "string",
+          "description": "Optional counterparty phone number."
+        },
+        "transactionDateText": {
+          "type": "string",
+          "description": "Formatted date text."
+        },
+        "transactionTimeText": {
+          "type": "string",
+          "description": "Formatted time text."
+        },
+        "timestampEpochMs": {
+          "type": "integer",
+          "description": "Transaction timestamp in epoch milliseconds."
+        },
+        "description": {
+          "type": "string",
+          "description": "Transaction summary description."
+        },
+        "providerReportedBalance": {
+          "type": "string",
+          "description": "Optional wallet balance reported in provider SMS."
+        },
+        "verificationStatus": {
+          "type": "string",
+          "enum": [
+            "FORMAT_VALIDATED",
+            "NEEDS_REVIEW",
+            "DUPLICATE",
+            "SUSPICIOUS",
+            "REVERSED",
+            "REFUNDED"
+          ],
+          "description": "Rule-based verification status."
+        },
+        "verificationNotes": {
+          "type": "string",
+          "description": "Verification details or disclaimer."
+        },
+        "manualEntry": {
+          "type": "boolean",
+          "description": "Whether entered manually rather than parsed from SMS."
+        },
+        "creditAdjustment": {
+          "type": "boolean",
+          "description": "Credit direction flag for manual adjustments."
+        },
+        "relatedTransactionId": {
+          "type": "string",
+          "description": "Optional linked original transaction ID for refunds/reversals."
+        },
+        "formatVersion": {
+          "type": "string",
+          "description": "Optional parser format version tag."
+        },
+        "reconciliationNote": {
+          "type": "string",
+          "description": "Optional user reconciliation note."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when updated (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "transactionId",
+        "network",
+        "type",
+        "amount",
+        "fee",
+        "senderOrRecipientName",
+        "transactionDateText",
+        "transactionTimeText",
+        "timestampEpochMs",
+        "description",
+        "verificationStatus",
+        "verificationNotes",
+        "manualEntry",
+        "creditAdjustment",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "CloudOpeningBalance": {
+      "title": "CloudOpeningBalance",
+      "description": "Opening wallet balance per mobile money network.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the owner."
+        },
+        "network": {
+          "type": "string",
+          "enum": ["MPESA", "AIRTEL_MONEY", "MIXX_BY_YAS"],
+          "description": "Supported mobile money network code."
+        },
+        "amount": {
+          "type": "string",
+          "description": "Opening balance amount as decimal string."
+        },
+        "effectiveDateEpochMs": {
+          "type": "integer",
+          "description": "Effective timestamp in epoch milliseconds."
+        },
+        "note": {
+          "type": "string",
+          "description": "Optional note for opening balance."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when updated (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "network",
+        "amount",
+        "effectiveDateEpochMs",
+        "note",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserBusinessProfile" },
+      "description": "Authenticated user's business profile and preferences."
+    },
+    "/users/{userId}/transactions/{txDocId}": {
+      "schema": { "$ref": "#/entities/CloudTransactionRecord" },
+      "description": "Synced mobile money and manual transaction records owned by the user."
+    },
+    "/users/{userId}/opening_balances/{networkCode}": {
+      "schema": { "$ref": "#/entities/CloudOpeningBalance" },
+      "description": "Synced opening wallet balances per mobile money provider."
+    }
+  }
+}

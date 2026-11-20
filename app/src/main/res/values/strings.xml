@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Mauzo App</string>
+    <string name="sms_permission_rationale_title">Ruhusa ya Kusoma SMS za Fedha</string>
+    <string name="sms_permission_rationale_body">Mauzo App inahitaji ruhusa ya RECEIVE_SMS na READ_SMS ili kutambua kiotomatiki miamala ya M-Pesa, Airtel Money, na Mixx by Yas. Ujumbe wote unachakatwa na kuhifadhiwa kwenye simu yako pekee bila kutumwa nje.</string>
+    <string name="sms_receiver_channel_name">Ufuatiliaji wa Miamala</string>
+</resources>

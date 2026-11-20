@@ -1,0 +1,207 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidNetwork(net) {
+      return net in ['MPESA', 'AIRTEL_MONEY', 'MIXX_BY_YAS', 'UNKNOWN'];
+    }
+
+    function isValidSupportedNetwork(net) {
+      return net in ['MPESA', 'AIRTEL_MONEY', 'MIXX_BY_YAS'];
+    }
+
+    function isValidTransactionType(t) {
+      return t in [
+        'MONEY_RECEIVED',
+        'MONEY_SENT',
+        'CASH_WITHDRAWAL',
+        'CASH_DEPOSIT',
+        'TRANSACTION_FEE',
+        'REFUND',
+        'REVERSAL',
+        'MANUAL_ADJUSTMENT'
+      ];
+    }
+
+    function isValidVerificationStatus(s) {
+      return s in [
+        'FORMAT_VALIDATED',
+        'NEEDS_REVIEW',
+        'DUPLICATE',
+        'SUSPICIOUS',
+        'REVERSED',
+        'REFUNDED'
+      ];
+    }
+
+    function isValidBusinessProfile(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.businessName is string && data.businessName.size() >= 1 && data.businessName.size() <= 100 &&
+             data.primaryLanguage in ['sw', 'en'] &&
+             data.currencyCode is string && data.currencyCode.size() >= 1 && data.currencyCode.size() <= 5 &&
+             (!('email' in data) || (data.email is string && data.email.size() <= 200)) &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidCloudTransaction(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.transactionId is string && data.transactionId.size() >= 1 && data.transactionId.size() <= 80 &&
+             isValidNetwork(data.network) &&
+             isValidTransactionType(data.type) &&
+             data.amount is string && data.amount.size() >= 1 && data.amount.size() <= 32 &&
+             data.fee is string && data.fee.size() >= 1 && data.fee.size() <= 32 &&
+             data.senderOrRecipientName is string && data.senderOrRecipientName.size() >= 1 && data.senderOrRecipientName.size() <= 120 &&
+             (!('senderOrRecipientPhone' in data) || (data.senderOrRecipientPhone is string && data.senderOrRecipientPhone.size() <= 40)) &&
+             data.transactionDateText is string && data.transactionDateText.size() >= 1 && data.transactionDateText.size() <= 30 &&
+             data.transactionTimeText is string && data.transactionTimeText.size() >= 1 && data.transactionTimeText.size() <= 20 &&
+             data.timestampEpochMs is int && data.timestampEpochMs >= 0 &&
+             data.description is string && data.description.size() <= 300 &&
+             (!('providerReportedBalance' in data) || (data.providerReportedBalance is string && data.providerReportedBalance.size() <= 32)) &&
+             isValidVerificationStatus(data.verificationStatus) &&
+             data.verificationNotes is string && data.verificationNotes.size() <= 400 &&
+             data.manualEntry is bool &&
+             data.creditAdjustment is bool &&
+             (!('relatedTransactionId' in data) || (data.relatedTransactionId is string && data.relatedTransactionId.size() <= 80)) &&
+             (!('formatVersion' in data) || (data.formatVersion is string && data.formatVersion.size() <= 40)) &&
+             (!('reconciliationNote' in data) || (data.reconciliationNote is string && data.reconciliationNote.size() <= 300)) &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidOpeningBalance(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             isValidSupportedNetwork(data.network) &&
+             data.amount is string && data.amount.size() >= 1 && data.amount.size() <= 32 &&
+             data.effectiveDateEpochMs is int && data.effectiveDateEpochMs >= 0 &&
+             data.note is string && data.note.size() <= 200 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if false;
+
+      allow create: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       incoming().keys().hasAll([
+                         'userId', 'businessName', 'primaryLanguage', 'currencyCode', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'businessName', 'primaryLanguage', 'currencyCode', 'email', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidBusinessProfile(incoming(), userId);
+
+      allow update: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       isValidBusinessProfile(incoming(), userId) &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'businessName', 'primaryLanguage', 'currencyCode', 'email', 'updatedAt'
+                       ]);
+
+      allow delete: if isOwner(userId) && isValidId(userId);
+
+      match /transactions/{txDocId} {
+        allow get: if isOwner(userId) && isValidId(txDocId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(txDocId) &&
+                         incoming().keys().hasAll([
+                           'userId', 'transactionId', 'network', 'type', 'amount', 'fee',
+                           'senderOrRecipientName', 'transactionDateText', 'transactionTimeText',
+                           'timestampEpochMs', 'description', 'verificationStatus', 'verificationNotes',
+                           'manualEntry', 'creditAdjustment', 'createdAt', 'updatedAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'transactionId', 'network', 'type', 'amount', 'fee',
+                           'senderOrRecipientName', 'senderOrRecipientPhone',
+                           'transactionDateText', 'transactionTimeText', 'timestampEpochMs',
+                           'description', 'providerReportedBalance', 'verificationStatus',
+                           'verificationNotes', 'manualEntry', 'creditAdjustment',
+                           'relatedTransactionId', 'formatVersion', 'reconciliationNote',
+                           'createdAt', 'updatedAt'
+                         ]) &&
+                         isValidCloudTransaction(incoming(), userId);
+
+        allow update: if isOwner(userId) &&
+                         isValidId(txDocId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         isValidCloudTransaction(incoming(), userId) &&
+                         (
+                           incoming().diff(existing()).affectedKeys().hasOnly([
+                             'senderOrRecipientName', 'senderOrRecipientPhone', 'description',
+                             'verificationStatus', 'verificationNotes', 'relatedTransactionId',
+                             'reconciliationNote', 'updatedAt'
+                           ]) ||
+                           incoming().diff(existing()).affectedKeys().hasOnly([
+                             'transactionId', 'network', 'type', 'amount', 'fee',
+                             'senderOrRecipientName', 'senderOrRecipientPhone',
+                             'transactionDateText', 'transactionTimeText', 'timestampEpochMs',
+                             'description', 'providerReportedBalance', 'verificationStatus',
+                             'verificationNotes', 'manualEntry', 'creditAdjustment',
+                             'relatedTransactionId', 'formatVersion', 'reconciliationNote',
+                             'updatedAt'
+                           ])
+                         );
+
+        allow delete: if isOwner(userId) && isValidId(txDocId);
+      }
+
+      match /opening_balances/{networkCode} {
+        allow get: if isOwner(userId) && isValidId(networkCode);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(networkCode) &&
+                         incoming().keys().hasAll([
+                           'userId', 'network', 'amount', 'effectiveDateEpochMs', 'note', 'createdAt', 'updatedAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'network', 'amount', 'effectiveDateEpochMs', 'note', 'createdAt', 'updatedAt'
+                         ]) &&
+                         isValidOpeningBalance(incoming(), userId);
+
+        allow update: if isOwner(userId) &&
+                         isValidId(networkCode) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         isValidOpeningBalance(incoming(), userId) &&
+                         incoming().diff(existing()).affectedKeys().hasOnly([
+                           'network', 'amount', 'effectiveDateEpochMs', 'note', 'updatedAt'
+                         ]);
+
+        allow delete: if isOwner(userId) && isValidId(networkCode);
+      }
+    }
+  }
+}

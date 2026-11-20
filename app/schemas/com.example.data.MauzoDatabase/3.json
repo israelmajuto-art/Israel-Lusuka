@@ -1,0 +1,690 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "113d4740a39280cd1cb98b1f4ade91bf",
+    "entities": [
+      {
+        "tableName": "transactions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transactionId` TEXT NOT NULL, `network` TEXT NOT NULL, `type` TEXT NOT NULL, `amountMinor` INTEGER NOT NULL, `feeMinor` INTEGER NOT NULL, `senderOrRecipientName` TEXT NOT NULL, `senderOrRecipientPhone` TEXT, `transactionDateText` TEXT NOT NULL, `transactionTimeText` TEXT NOT NULL, `timestampEpochMs` INTEGER NOT NULL, `description` TEXT NOT NULL, `providerReportedBalanceMinor` INTEGER, `verificationStatus` TEXT NOT NULL, `verificationNotes` TEXT NOT NULL, `isManualEntry` INTEGER NOT NULL, `isCreditAdjustment` INTEGER NOT NULL, `relatedTransactionId` TEXT, `smsArchiveId` INTEGER, `formatVersion` TEXT, `reconciliationNote` TEXT, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, FOREIGN KEY(`smsArchiveId`) REFERENCES `sms_archive`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionId",
+            "columnName": "transactionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "network",
+            "columnName": "network",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amountMinor",
+            "columnName": "amountMinor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "feeMinor",
+            "columnName": "feeMinor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderOrRecipientName",
+            "columnName": "senderOrRecipientName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderOrRecipientPhone",
+            "columnName": "senderOrRecipientPhone",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "transactionDateText",
+            "columnName": "transactionDateText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionTimeText",
+            "columnName": "transactionTimeText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestampEpochMs",
+            "columnName": "timestampEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "providerReportedBalanceMinor",
+            "columnName": "providerReportedBalanceMinor",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "verificationStatus",
+            "columnName": "verificationStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "verificationNotes",
+            "columnName": "verificationNotes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isManualEntry",
+            "columnName": "isManualEntry",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCreditAdjustment",
+            "columnName": "isCreditAdjustment",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "relatedTransactionId",
+            "columnName": "relatedTransactionId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "smsArchiveId",
+            "columnName": "smsArchiveId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "formatVersion",
+            "columnName": "formatVersion",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "reconciliationNote",
+            "columnName": "reconciliationNote",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "createdAtEpochMs",
+            "columnName": "createdAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAtEpochMs",
+            "columnName": "updatedAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_transactions_transactionId",
+            "unique": true,
+            "columnNames": [
+              "transactionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_transactions_transactionId` ON `${TABLE_NAME}` (`transactionId`)"
+          },
+          {
+            "name": "index_transactions_network",
+            "unique": false,
+            "columnNames": [
+              "network"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_network` ON `${TABLE_NAME}` (`network`)"
+          },
+          {
+            "name": "index_transactions_type",
+            "unique": false,
+            "columnNames": [
+              "type"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_type` ON `${TABLE_NAME}` (`type`)"
+          },
+          {
+            "name": "index_transactions_verificationStatus",
+            "unique": false,
+            "columnNames": [
+              "verificationStatus"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_verificationStatus` ON `${TABLE_NAME}` (`verificationStatus`)"
+          },
+          {
+            "name": "index_transactions_timestampEpochMs",
+            "unique": false,
+            "columnNames": [
+              "timestampEpochMs"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_timestampEpochMs` ON `${TABLE_NAME}` (`timestampEpochMs`)"
+          },
+          {
+            "name": "index_transactions_senderOrRecipientPhone",
+            "unique": false,
+            "columnNames": [
+              "senderOrRecipientPhone"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_senderOrRecipientPhone` ON `${TABLE_NAME}` (`senderOrRecipientPhone`)"
+          },
+          {
+            "name": "index_transactions_smsArchiveId",
+            "unique": false,
+            "columnNames": [
+              "smsArchiveId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_smsArchiveId` ON `${TABLE_NAME}` (`smsArchiveId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "sms_archive",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "smsArchiveId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "sms_archive",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `senderIdentifier` TEXT NOT NULL, `originalContent` TEXT NOT NULL, `network` TEXT NOT NULL, `extractedTransactionId` TEXT, `extractedAmountMinor` INTEGER, `receivedAtEpochMs` INTEGER NOT NULL, `processingStatus` TEXT NOT NULL, `parseErrorReason` TEXT, `relatedTransactionLocalId` INTEGER, `importSource` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderIdentifier",
+            "columnName": "senderIdentifier",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originalContent",
+            "columnName": "originalContent",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "network",
+            "columnName": "network",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "extractedTransactionId",
+            "columnName": "extractedTransactionId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "extractedAmountMinor",
+            "columnName": "extractedAmountMinor",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "receivedAtEpochMs",
+            "columnName": "receivedAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "processingStatus",
+            "columnName": "processingStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parseErrorReason",
+            "columnName": "parseErrorReason",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "relatedTransactionLocalId",
+            "columnName": "relatedTransactionLocalId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "importSource",
+            "columnName": "importSource",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_sms_archive_extractedTransactionId",
+            "unique": false,
+            "columnNames": [
+              "extractedTransactionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sms_archive_extractedTransactionId` ON `${TABLE_NAME}` (`extractedTransactionId`)"
+          },
+          {
+            "name": "index_sms_archive_network",
+            "unique": false,
+            "columnNames": [
+              "network"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sms_archive_network` ON `${TABLE_NAME}` (`network`)"
+          },
+          {
+            "name": "index_sms_archive_processingStatus",
+            "unique": false,
+            "columnNames": [
+              "processingStatus"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sms_archive_processingStatus` ON `${TABLE_NAME}` (`processingStatus`)"
+          },
+          {
+            "name": "index_sms_archive_receivedAtEpochMs",
+            "unique": false,
+            "columnNames": [
+              "receivedAtEpochMs"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sms_archive_receivedAtEpochMs` ON `${TABLE_NAME}` (`receivedAtEpochMs`)"
+          }
+        ]
+      },
+      {
+        "tableName": "wallets",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`network` TEXT NOT NULL, `calculatedBalanceMinor` INTEGER NOT NULL, `providerReportedBalanceMinor` INTEGER, `providerBalanceUpdatedAtEpochMs` INTEGER, `lastReconciledAtEpochMs` INTEGER, `transactionCount` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, PRIMARY KEY(`network`))",
+        "fields": [
+          {
+            "fieldPath": "network",
+            "columnName": "network",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "calculatedBalanceMinor",
+            "columnName": "calculatedBalanceMinor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "providerReportedBalanceMinor",
+            "columnName": "providerReportedBalanceMinor",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "providerBalanceUpdatedAtEpochMs",
+            "columnName": "providerBalanceUpdatedAtEpochMs",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "lastReconciledAtEpochMs",
+            "columnName": "lastReconciledAtEpochMs",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "transactionCount",
+            "columnName": "transactionCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAtEpochMs",
+            "columnName": "updatedAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "network"
+          ]
+        }
+      },
+      {
+        "tableName": "opening_balances",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `network` TEXT NOT NULL, `amountMinor` INTEGER NOT NULL, `effectiveDateEpochMs` INTEGER NOT NULL, `note` TEXT NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, FOREIGN KEY(`network`) REFERENCES `wallets`(`network`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "network",
+            "columnName": "network",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amountMinor",
+            "columnName": "amountMinor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "effectiveDateEpochMs",
+            "columnName": "effectiveDateEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAtEpochMs",
+            "columnName": "updatedAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_opening_balances_network",
+            "unique": true,
+            "columnNames": [
+              "network"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_opening_balances_network` ON `${TABLE_NAME}` (`network`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "wallets",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "network"
+            ],
+            "referencedColumns": [
+              "network"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "network_formats",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`network` TEXT NOT NULL, `displayName` TEXT NOT NULL, `senderIdentifiersCsv` TEXT NOT NULL, `formatVersion` TEXT NOT NULL, `isEnabled` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, PRIMARY KEY(`network`))",
+        "fields": [
+          {
+            "fieldPath": "network",
+            "columnName": "network",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayName",
+            "columnName": "displayName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderIdentifiersCsv",
+            "columnName": "senderIdentifiersCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "formatVersion",
+            "columnName": "formatVersion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isEnabled",
+            "columnName": "isEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAtEpochMs",
+            "columnName": "updatedAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "network"
+          ]
+        }
+      },
+      {
+        "tableName": "business_settings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `businessName` TEXT NOT NULL, `primaryLanguage` TEXT NOT NULL, `currencyCode` TEXT NOT NULL, `hideBalancesOnHome` INTEGER NOT NULL, `pinEnabled` INTEGER NOT NULL, `biometricEnabled` INTEGER NOT NULL, `autoBackupEnabled` INTEGER NOT NULL, `lastBackupEpochMs` INTEGER, `onboardingCompleted` INTEGER NOT NULL, `lastAutoBackupStatus` TEXT, `smsNotificationsEnabled` INTEGER NOT NULL, `simSlotFilter` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "businessName",
+            "columnName": "businessName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "primaryLanguage",
+            "columnName": "primaryLanguage",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currencyCode",
+            "columnName": "currencyCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hideBalancesOnHome",
+            "columnName": "hideBalancesOnHome",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pinEnabled",
+            "columnName": "pinEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "biometricEnabled",
+            "columnName": "biometricEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "autoBackupEnabled",
+            "columnName": "autoBackupEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastBackupEpochMs",
+            "columnName": "lastBackupEpochMs",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "onboardingCompleted",
+            "columnName": "onboardingCompleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastAutoBackupStatus",
+            "columnName": "lastAutoBackupStatus",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "smsNotificationsEnabled",
+            "columnName": "smsNotificationsEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "simSlotFilter",
+            "columnName": "simSlotFilter",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "audit_logs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `entityType` TEXT NOT NULL, `entityId` TEXT NOT NULL, `action` TEXT NOT NULL, `summary` TEXT NOT NULL, `previousValue` TEXT, `newValue` TEXT, `reason` TEXT, `timestampEpochMs` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "entityType",
+            "columnName": "entityType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "entityId",
+            "columnName": "entityId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "action",
+            "columnName": "action",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "summary",
+            "columnName": "summary",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "previousValue",
+            "columnName": "previousValue",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "newValue",
+            "columnName": "newValue",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "reason",
+            "columnName": "reason",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "timestampEpochMs",
+            "columnName": "timestampEpochMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_audit_logs_entityType_entityId",
+            "unique": false,
+            "columnNames": [
+              "entityType",
+              "entityId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_audit_logs_entityType_entityId` ON `${TABLE_NAME}` (`entityType`, `entityId`)"
+          },
+          {
+            "name": "index_audit_logs_timestampEpochMs",
+            "unique": false,
+            "columnNames": [
+              "timestampEpochMs"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_audit_logs_timestampEpochMs` ON `${TABLE_NAME}` (`timestampEpochMs`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '113d4740a39280cd1cb98b1f4ade91bf')"
+    ]
+  }
+}
